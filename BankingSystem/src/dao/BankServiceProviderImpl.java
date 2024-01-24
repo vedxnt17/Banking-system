@@ -69,7 +69,7 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
     }
 
     private Map<Long, Account> castToMap(List<Account> listAccounts) {
-		// TODO Auto-generated method stub
+		
     	Map<Long,Account> hm=new HashMap<>();
     	hm=new HashMap<>();
     	for(int i=0;i<listAccounts.size();i++)
@@ -82,7 +82,7 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
 
 	@Override
     public void calculateInterest() {
-        // Calculate interest for all accounts in the bank
+      
     	
     	for (Map.Entry<Long, Account> entry : accountList.entrySet()) {
     		long accountNumber = entry.getKey();
@@ -126,9 +126,7 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
     }
     
     public double deposit(long accountNumber, double amount) {
-        // Deposit the specified amount into the account
-        // Implement logic to update the account balance in storage or database
-        // For demonstration purposes, return a dummy balance
+
     	Account acc=findAccountObject(accountNumber);
     	if(acc==null)
     	{
@@ -189,17 +187,17 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
             	return bankdb.getAccountBalance(accountNumber);
         	}
         	catch (InvalidAccountException e) {
-    			// TODO Auto-generated catch block
+    			
         		System.out.println("Sender Account Invalid");
     			throw new InvalidAccountException("Sender Account Invalid");
     		}
         	catch (InsufficientFundException e) {
-    			// TODO Auto-generated catch block
+    			
         		System.out.println("Insufficient Funds in sender account");
     			throw new InsufficientFundException("Insufficient Funds in sender account");
     		}
         	catch (OverDraftLimitExcededException e) {
-    			// TODO Auto-generated catch block
+    			
         		System.out.println("Overdraft Limit Exceeded");
     			throw new OverDraftLimitExcededException("Overdraft Limit Exceeded");
     		}
@@ -226,15 +224,15 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
     	try {
 			double sendAmount=withdraw(fromAccountNumber,amount);
 		} catch (InvalidAccountException e) {
-			// TODO Auto-generated catch block
+			
 			throw new InvalidAccountException("Sender Account Invalid");
 		}
     	catch (InsufficientFundException e) {
-			// TODO Auto-generated catch block
+			
 			throw new InsufficientFundException("Insufficient Funds in sender account");
 		}
     	catch (OverDraftLimitExcededException e) {
-			// TODO Auto-generated catch block
+			/
 			throw new OverDraftLimitExcededException("Overdraft Limit Exceeded");
 		}
     	try
@@ -267,10 +265,5 @@ public class BankServiceProviderImpl extends CustomerServiceProviderImpl impleme
 		return bankdb.getTransactions(accountNumber, startDate, endDate);
 	}
     
-    // Additional methods...
-
-	
-    // Existing methods from BankServiceProviderImpl...
-
-    // Additional methods...
+   
 }
