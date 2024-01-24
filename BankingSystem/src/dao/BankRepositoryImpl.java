@@ -23,13 +23,13 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	@Override
 	public void createAccount(Customer customer, long accNo, String accType, float balance) {
-		// TODO Auto-generated method stub
+		
 		try {
-	        // Assuming you have a table named 'Customers' with columns 'first_name', 'last_name', 'email', 'phone_number', and 'address'
+	        
 	        String sql = "INSERT INTO Customers (customer_id,first_name, last_name, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)";
 
 	        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-	            // Set values for the placeholders in the SQL statement
+	            
 	        	preparedStatement.setInt(1, customer.getCustomer_id());
 	            preparedStatement.setString(2, customer.getFirst_name());
 	            preparedStatement.setString(3, customer.getLast_name());
@@ -37,14 +37,14 @@ public class BankRepositoryImpl implements IBankRepository {
 	            preparedStatement.setLong(5, customer.getPhone_number());
 	            preparedStatement.setString(6, customer.getAddress());
 
-	            // Execute the SQL statement
+	      
 	            preparedStatement.executeUpdate();
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 		try {
-	        // Assuming you have a table named 'Accounts' with columns 'AccountNumber', 'AccountType', 'AccountBalance', and 'customer_id'
+	       
 	        String sql = "INSERT INTO Accounts (account_id, account_type, balance, customer_id) VALUES (?, ?, ?, ?)";
 
 	        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
@@ -53,7 +53,7 @@ public class BankRepositoryImpl implements IBankRepository {
 	            preparedStatement.setFloat(3, balance);
 	            preparedStatement.setInt(4, customer.getCustomer_id());
 
-	            // Execute the SQL statement
+	      
 	            preparedStatement.executeUpdate();
 	        }
 	    } catch (SQLException e) {
@@ -64,11 +64,11 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	@Override
 	public List<Account> listAccounts() {
-		// TODO Auto-generated method stub
+		
 		List<Account> accounts = new ArrayList<>();
 
         try {
-            // Assuming you have a table named 'Accounts' with columns 'AccountNumber', 'AccountType', 'AccountBalance', and 'customer_id'
+         
             String sql = "SELECT * FROM Accounts";
 
             try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
@@ -79,14 +79,13 @@ public class BankRepositoryImpl implements IBankRepository {
                         String account_type = resultSet.getString("account_type");
                         float balance = resultSet.getFloat("balance");
 
-                        // Assuming you have a method to fetch customer details by ID
                         int customer_id = resultSet.getInt("customer_id");
                         Customer customer = getCustomerById(customer_id);
                         if(customer==null)
                         {
                         	throw new NullPointerException("No customer associated with account");
                         }
-                        // Create an Account object and add it to the list
+                     
                         Account account = new Account(account_type, balance, customer);
                         account.setAccount_id(account_id);
                         accounts.add(account);
@@ -95,7 +94,7 @@ public class BankRepositoryImpl implements IBankRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle exceptions appropriately, e.g., log them or throw a custom exception
+    
         }
 
         return accounts;
@@ -103,9 +102,9 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	@Override
 	public void calculateInterest() {
-		// TODO Auto-generated method stub
+		
 		try {
-	        // Assuming you have a table named 'SavingsAccounts' with columns 'AccountNumber', 'InterestRate'
+	     
 	        String sql = "SELECT * FROM Accounts WHERE AccountType='savings'";
 	        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
 	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -124,14 +123,14 @@ public class BankRepositoryImpl implements IBankRepository {
 	            }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Handle exceptions appropriately, e.g., log them or throw a custom exception
+	    
 	    }
 	}
 
 	@Override
 	public float getAccountBalance(long account_id) {
 		try {
-	        // Assuming you have a table named 'Accounts' with columns 'AccountNumber', 'AccountBalance'
+	       
 	        String sql = "SELECT balance FROM Accounts WHERE account_id = ?";
 
 	        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
@@ -151,10 +150,8 @@ public class BankRepositoryImpl implements IBankRepository {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Handle exceptions appropriately, e.g., log them or throw a custom exception
 	    }
 
-	    // Return a default value or throw an exception based on your application logic
 	    return 0;
 	}
 
@@ -190,16 +187,14 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	@Override
 	public float withdraw(long account_id, float amount) {
-		// TODO Auto-generated method stub
+		
 		try {
-	        // Assuming you have a table named 'Accounts' with columns 'account_id', 'AccountBalance', 'AccountType'
 	        String sqlSelect = "SELECT balance, AccountType FROM Accounts WHERE account_id = ?";
 	        String sqlUpdate = "UPDATE Accounts SET balance = balance - ? WHERE account_id = ?";
 
 	        try (PreparedStatement selectStatement = con.prepareStatement(sqlSelect);
 	             PreparedStatement updateStatement = con.prepareStatement(sqlUpdate)) {
 
-	            // Set the parameter for the SELECT statement
 	            selectStatement.setLong(1, account_id);
 
 	            try (ResultSet resultSet = selectStatement.executeQuery()) {
@@ -207,7 +202,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	                    float currentBalance = resultSet.getFloat("balance");
 	                    String accountType = resultSet.getString("account_type");
 
-	                    // Check withdrawal constraints based on account type
 	                    if ("Savings".equals(accountType) && currentBalance - amount < 500.0) {
 	                        System.out.println("Withdrawal failed. Minimum balance rule violated.");
 	                        throw new InsufficientFundException("Withdrawal failed. Minimum balance rule violated");
@@ -222,7 +216,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	                        System.out.println("Withdrawal failed. Minimum balance rule violated.");
 	                        throw new InsufficientFundException("Withdrawal failed. Minimum balance rule violated");
 	                    }
-	                    // Set values for the placeholders in the UPDATE statement
 	                    updateStatement.setFloat(1, amount);
 	                    updateStatement.setLong(2, account_id);
 
@@ -244,10 +237,8 @@ public class BankRepositoryImpl implements IBankRepository {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Handle exceptions appropriately, e.g., log them or throw a custom exception
 	    }
 
-	    // Return a default value or throw an exception based on your application logic
 	    return 0;
 	}
 
@@ -259,7 +250,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	        // Withdraw from sender's account
 	        float senderBalance = withdraw(fromAccount_id, amount);
 
-	        // If the withdrawal was successful, deposit into receiver's account
 	        if (senderBalance != 0) {
 	            deposit(toAccount_id, amount);
 	            System.out.println("Transfer successful. Rs." + amount + " transferred from account " + fromAccount_id + " to account " + toAccount_id);
@@ -324,7 +314,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Handle exceptions appropriately, e.g., log them or throw a custom exception
 	        return "An error occurred while fetching account details.";
 	    }
 	}
@@ -340,8 +329,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	        Date startDate = dateFormat.parse(fromDate);
 	        Date endDate = dateFormat.parse(toDate);
 
-	        // Implement logic to fetch transactions from the database between startDate and endDate
-	        // Assuming you have a 'Transactions' table with columns 'AccountNumber', 'DateTime', 'TransactionType', 'TransactionAmount', 'Description'
 	        String sql = "SELECT * FROM Transactions WHERE account_id = ? AND transaction_date BETWEEN ? AND ?";
 	        try (PreparedStatement statement = con.prepareStatement(sql)) {
 	            statement.setLong(1, account_id);
@@ -362,7 +349,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	        }
 	    } catch (ParseException | SQLException e) {
 	        e.printStackTrace();
-	        // Handle exceptions appropriately, e.g., log them or throw a custom exception
 	    }
 
 	    return transactions;
@@ -370,7 +356,6 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	private Customer getCustomerById(int customer_id) {
 		try {
-	        // Assuming you have a table named 'Customers' with columns 'customer_id', 'first_name', 'last_name', 'email', 'phone_number', and 'address'
 	        String sql = "SELECT * FROM Customers WHERE customer_id = ?";
 
 	        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
@@ -401,8 +386,6 @@ public class BankRepositoryImpl implements IBankRepository {
 
 	public Account getAccount(long account_id) {
 	    try {
-	        // Assuming you have a table named 'Accounts' with columns 'AccountNumber', 'AccountType', 'AccountBalance', 'customer_id'
-	        // and a table named 'Customers' with columns 'customer_id', 'first_name', 'last_name', 'email', 'phone_number', 'address'
 	        String sql = "SELECT A.account_id, A.account_type, A.balance, C.customer_id, C.first_name, C.last_name, C.email, C.phone_number, C.address " +
 	                     "FROM Accounts A JOIN Customers C ON A.customer_id = C.customer_id " +
 	                     "WHERE A.account_id = ?";
@@ -424,7 +407,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	                    long phone_number = resultSet.getLong("phone_number");
 	                    String address = resultSet.getString("address");
 
-	                    // Construct and return the account object using the parameterized constructor
 	                    return new Account(accountId, accountType, accountBalance, new Customer(customer_id, first_name, last_name, email, phone_number, address));
 	                } else {
 	                    // Account not found
@@ -442,7 +424,6 @@ public class BankRepositoryImpl implements IBankRepository {
 	void addTransaction(Transaction transaction)
 	{
 		try {
-	        // Assuming you have a table named 'Transactions' with columns 'AccountNumber', 'Description', 'DateTime', 'TransactionType', 'TransactionAmount'
 	        String sql = "INSERT INTO Transactions (account_id, transaction_id, transaction_date, transaction_type, amount) VALUES (?, ?, ?, ?, ?)";
 
 	        try (PreparedStatement statement = con.prepareStatement(sql)) {
