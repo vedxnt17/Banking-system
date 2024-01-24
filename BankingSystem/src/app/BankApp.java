@@ -70,7 +70,6 @@ public class BankApp {
     }
 
     private static void getTransactionsBetweenDate(IBankServiceProvider bankServiceProvider, Scanner scanner) {
-		// TODO Auto-generated method stub
     	BankServiceProviderImpl bankService=(BankServiceProviderImpl) bankServiceProvider;
     	System.out.println("Enter account number:");
         long account_id = scanner.nextLong();
@@ -175,8 +174,7 @@ public class BankApp {
     }
 
     private static void withdrawMenu(IBankServiceProvider bankServiceProvider, Scanner scanner) {
-        // Implement the withdraw menu logic
-        // Use bankServiceProvider.withdraw() method
+      
     	BankServiceProviderImpl bankService=(BankServiceProviderImpl) bankServiceProvider;
     	System.out.print("Enter account number to withdraw from: ");
         long account_id = scanner.nextLong();
@@ -205,8 +203,7 @@ public class BankApp {
     }
 
     private static void getBalanceMenu(IBankServiceProvider bankServiceProvider, Scanner scanner) {
-        // Implement the get balance menu logic
-        // Use bankServiceProvider.getAccountBalance() method
+      
     	BankServiceProviderImpl bankService=(BankServiceProviderImpl) bankServiceProvider;
     	System.out.print("Enter account number to get balance: ");
         long account_id = scanner.nextLong();
